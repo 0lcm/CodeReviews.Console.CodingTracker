@@ -11,7 +11,7 @@ namespace codingTracker._0lcm
             .AddJsonFile("appSettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-        static async Task Main(string[] args)
+        static async Task Main()
         {
             SqliteController.CreateDatabase();
             await ConsoleUi.MainMenu();
