@@ -12,6 +12,7 @@ internal class SqliteController
     private static readonly ILogger Logger = AppLogger.CreateLogger<SqliteController>();
 
     private static readonly string fullDateWithTimeFormat = DateTimeFormats.FullDateWithTimeFormat;
+    private static readonly string dateIso = DateTimeFormats.DateIso;
 
     //------- Connection Factory -------
     private static SqliteConnection CreateOpenConnection()
@@ -43,6 +44,7 @@ internal class SqliteController
                 startTime   TEXT NOT NULL,
                 endTime     TEXT NOT NULL,
                 duration    TEXT NOT NULL,
+                date        TEXT NOT NULL,
                 PRIMARY KEY(id AUTOINCREMENT)
                 );";
 
@@ -61,8 +63,8 @@ internal class SqliteController
     internal static void InsertCodingSession(CodingSession session)
     {
         const string InsertCommand = @"
-            INSERT INTO codingSessions (startTime, endTime, duration)
-            VALUES (@StartTime, @EndTime, @Duration);
+            INSERT INTO codingSessions (startTime, endTime, duration, date)
+            VALUES (@StartTime, @EndTime, @Duration, @Date);
             SELECT last_insert_rowid();
             ";
 
@@ -73,7 +75,8 @@ internal class SqliteController
             {
                 StartTime = session.StartTime.ToString(fullDateWithTimeFormat),
                 EndTime = session.EndTime.ToString(fullDateWithTimeFormat),
-                Duration = session.Duration.ToString(@"hh\:mm\:ss")
+                Duration = session.Duration.ToString(@"hh\:mm\:ss"),
+                Date = session.Date.ToString(dateIso)
             });
 
             session.Id = sessionId;
@@ -139,7 +142,7 @@ internal class SqliteController
             StartTime = DateTime.Parse(row.startTime),
             EndTime = DateTime.Parse(row.endTime),
             Duration = TimeSpan.Parse(row.duration),
-            Date = DateOnly.FromDateTime(DateTime.Parse(row.startTime)),
+            Date = DateOnly.Parse(row.date)
         }).ToList();
     }
 }

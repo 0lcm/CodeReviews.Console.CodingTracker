@@ -2,7 +2,7 @@
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-namespace codingTracker._0lcm.User_Interface;
+namespace codingTracker._0lcm.UserInterface;
 
 internal static class DisplayHelper
 {

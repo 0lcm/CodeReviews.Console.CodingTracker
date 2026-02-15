@@ -10,12 +10,12 @@
 
         public CodingSession() { }
 
-        public CodingSession(DateTime startTime, DateTime endTime, TimeSpan duration)
+        public CodingSession(DateTime startTime, DateTime endTime, TimeSpan duration, DateOnly date)
         {
             StartTime = startTime;
             EndTime = endTime;
             Duration = TimeSpan.FromSeconds(Math.Floor(duration.TotalSeconds));
-            Date = DateOnly.FromDateTime(startTime);
+            Date = date;
         }
     }
 }

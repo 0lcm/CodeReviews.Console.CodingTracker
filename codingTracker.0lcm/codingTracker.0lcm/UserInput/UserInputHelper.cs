@@ -1,6 +1,6 @@
 ﻿using codingTracker._0lcm.Models;
 using codingTracker._0lcm.Services;
-using codingTracker._0lcm.User_Interface;
+using codingTracker._0lcm.UserInterface;
 using Spectre.Console;
 
 namespace codingTracker._0lcm.User_Input
@@ -16,17 +16,22 @@ namespace codingTracker._0lcm.User_Input
             while (true)
             {
                 Console.Clear();
-
-                DisplayHelper.DisplayInfo("Please Follow a 24hr HH:mm Format (00:00-23:59). Press <Enter> to Submit Input.");
+                
+                DisplayHelper.DisplayInfo("Please Follow a 24hr HH:mm Format (00:00-23:59), and a yyyy-MM-dd format. Press <Enter> to Submit Input.");
                 DisplayHelper.DisplayInfo("Please Note That If Your End Time Is Before Your Start Time It Will Automatically Be Counted as a Cross-Midnight Session.\n");
 
                 string startTimeInput = DisplayHelper.DisplayQuestion("Please Enter a Start Time:");
                 string endTimeInput = DisplayHelper.DisplayQuestion("Please Enter an End Time:");
+                string dateInput = DisplayHelper.DisplayQuestion("Please enter a date:");
+
+                TimeSpan duration = TimeSpan.Zero;
+                string? errorMessage = null;
 
                 if (TimeValidationService.TryValidateStartAndEndTimes(startTimeInput, endTimeInput,
-                    out DateTime startTime, out DateTime endTime, out string? errorMessage))
+                    out DateTime startTime, out DateTime endTime, out errorMessage) &&
+                    TimeValidationService.TryValidateDateTime(dateInput, out DateOnly date, out errorMessage))
                 {
-                    TimeSpan duration = endTime - startTime;
+                    duration = endTime - startTime;
                     if (duration.TotalHours >= 10)
                     {
                         if (!AnsiConsole.Confirm($"[{DisplayHelper.Red}]This Session Is {duration.TotalHours:F1} Hours Long. Is That Right?[/]")) continue;
@@ -37,6 +42,7 @@ namespace codingTracker._0lcm.User_Input
                         session.StartTime = startTime;
                         session.EndTime = endTime;
                         session.Duration = duration;
+                        session.Date = date;
 
                         return session;
                     }
@@ -44,9 +50,12 @@ namespace codingTracker._0lcm.User_Input
                     return new CodingSession(
                             startTime: startTime,
                             endTime: endTime,
-                            duration: endTime - startTime
+                            duration: endTime - startTime,
+                            date: date
                         );
                 }
+
+                
 
                 DisplayHelper.DisplayUrgent(errorMessage ?? "Invalid Input.");
                 DisplayHelper.DisplayInfo("Press <Enter> To Re-enter Time Selections.");

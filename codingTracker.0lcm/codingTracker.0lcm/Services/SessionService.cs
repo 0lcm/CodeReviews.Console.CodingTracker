@@ -5,12 +5,13 @@ namespace codingTracker._0lcm.Services
 {
     internal class SessionService
     {
-        internal static void CreateNewSession(DateTime startTime, DateTime endTime, TimeSpan duration)
+        internal static void CreateNewSession(DateTime startTime, DateTime endTime, TimeSpan duration, DateOnly date)
         {
             CodingSession session = new(
                 startTime: startTime,
                 endTime: endTime,
-                duration: duration
+                duration: duration,
+                date: date
                 );
 
             SqliteController.InsertCodingSession(session);
@@ -37,7 +38,8 @@ namespace codingTracker._0lcm.Services
             CodingSession session = new(
                 startTime: timer.StartTime,
                 endTime: timer.EndTime,
-                duration: timer.EndTime - timer.StartTime
+                duration: timer.EndTime - timer.StartTime,
+                date: DateOnly.FromDateTime(timer.StartTime)
                 );
 
             SqliteController.InsertCodingSession(session);

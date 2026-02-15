@@ -7,8 +7,7 @@ using Microsoft.Extensions.Logging;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-namespace codingTracker._0lcm.User_Interface
-{
+namespace codingTracker._0lcm.UserInterface;
     internal class ConsoleUi
     {
         private static readonly ILogger Logger = AppLogger.CreateLogger<ConsoleUi>();
@@ -165,7 +164,7 @@ namespace codingTracker._0lcm.User_Interface
                 sessionMap[display] = session;
             }
 
-            return sessionMap;
+            return sessionMap!;
         }
 
         private static void LoadSpecificSession(CodingSession session)
@@ -245,4 +244,3 @@ namespace codingTracker._0lcm.User_Interface
             DisplayHelper.DisplaySpinner("Saving Coding Session...", 3500);
         }
     }
-}
